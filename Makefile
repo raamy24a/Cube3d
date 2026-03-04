@@ -66,10 +66,11 @@ OBJ_DIR     = obj
 SRCS = \
 	src/main.c \
 	src/init.c \
-	src/parsing/parse_map.c \
-	src/parsing/parse_texture.c \
-	src/render/render.c \
-	src/render/raycast.c
+	src/render.c \
+	src/raycast.c \
+	src/moving.c \
+	# src/parsing/parse_texture.c \
+	src/parsing/parse_map.c
 
 OBJS = $(SRCS:$(SRC_DIR)/%.c=$(OBJ_DIR)/%.o)
 
