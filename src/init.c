@@ -6,13 +6,13 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:28 by radib             #+#    #+#             */
-/*   Updated: 2026/03/09 02:56:58 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/09 13:26:29 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cube3d.h"
 
-static int	angle_calculator(char angle)
+static int angle_calculator(char angle)
 {
 	if (angle == 'N')
 		return (0);
@@ -24,19 +24,24 @@ static int	angle_calculator(char angle)
 		return (270);
 	return (0);
 }
-void	init_image(t_c *p)
-{
-	t_img img;
 
-	img.img = mlx_new_image(p->m_ptr, p->height , p->width);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
-								&img.line_length, &img.endian);
+t_img	*init_image(t_c *p, int height, int width)
+{
+	t_img	*img;
+
+	img = malloc(sizeof(t_img));
+	img->img = mlx_new_image(p->m_ptr, height, width);
+	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel,
+			&img->line_length, &img->endian);
+	return (img);
 }
 
 void	init_cube(t_c **c, char angle)
 {
 	t_c	*p;
+	int	i;
 
+	i = 0;
 	p = (*c);
 	p->width = 1000;
 	p->height = 1000;
@@ -44,4 +49,7 @@ void	init_cube(t_c **c, char angle)
 	p->fps = 60;
 	p->m_ptr = mlx_init();
 	p->w_ptr = mlx_new_window(p->m_ptr, p->width, p->height, "Cube");
+	p->rays = malloc(sizeof(int **) * p->width);
+	while (i < p->width)
+		p->rays[i] = malloc(sizeof(int *) * 2);
 }

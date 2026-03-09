@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:03:09 by radib             #+#    #+#             */
-/*   Updated: 2026/03/09 02:25:04 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/09 13:25:23 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,6 +38,7 @@ typedef struct cube
 	int		fps;
 	void	*m_ptr;
 	void	*w_ptr;
+	int		**rays;
 	t_img	*roof_and_ground;
 }			t_c;
 // init
@@ -45,5 +46,6 @@ void	init_cube(t_c **c, char angle);
 void	moving(t_c **c, int key);
 void	render_roof(int color, t_c **c);
 void	render_floor(int color, t_c **c);
+t_img	*init_image(t_c *p, int height, int width);
 
 #endif
