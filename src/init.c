@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:28 by radib             #+#    #+#             */
-/*   Updated: 2026/03/04 13:23:51 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/09 02:56:58 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,14 @@ static int	angle_calculator(char angle)
 	else if (angle == 'W')
 		return (270);
 	return (0);
+}
+void	init_image(t_c *p)
+{
+	t_img img;
+
+	img.img = mlx_new_image(p->m_ptr, p->height , p->width);
+	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel,
+								&img.line_length, &img.endian);
 }
 
 void	init_cube(t_c **c, char angle)

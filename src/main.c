@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:21 by radib             #+#    #+#             */
-/*   Updated: 2026/03/04 14:56:21 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/07 12:37:23 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,5 +68,6 @@ int	main(void)
 	mlx_key_hook(c->w_ptr, handle_key, c);
 	render_roof(10000 * 0 + 100 * 20 + 20, &c);
 	render_floor(300 * 10000 + 100 * 100 + 50, &c);
+	mlx_put_image_to_window(c->m_ptr, c->w_ptr, c->roof_and_ground, 0, 0);
 	mlx_loop(c->m_ptr);
 }
