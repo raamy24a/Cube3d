@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:03:09 by radib             #+#    #+#             */
-/*   Updated: 2026/03/10 14:58:33 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/10 17:58:32 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,12 @@ typedef struct s_img
 	int		endian;
 }	t_img;
 
+typedef struct raydata
+{
+	int		wall;
+	float	dist;
+}	t_r;
+
 typedef struct cube
 {
 	float	pos_x;
@@ -39,7 +45,7 @@ typedef struct cube
 	int		fps;
 	void	*m_ptr;
 	void	*w_ptr;
-	int		**rays;
+	t_r		*raydata;
 	t_img	*roof_and_ground;
 }			t_c;
 // init
