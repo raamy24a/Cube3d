@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:03:09 by radib             #+#    #+#             */
-/*   Updated: 2026/03/09 13:25:23 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/10 14:58:33 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 # include <stdio.h>
 # include <stdlib.h>
 # include "../minilibx/mlx.h"
+# include "math.h"
 
 typedef struct s_img
 {
@@ -31,7 +32,7 @@ typedef struct cube
 {
 	float	pos_x;
 	float	pos_y;
-	float	angle;
+	double	angle;
 	char	**map;
 	int		width;
 	int		height;
