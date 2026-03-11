@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:21 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 11:10:03 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/11 14:46:18 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,15 @@ void	moving_cam(t_c **c, int key)
 {
 	if (key == 65361)
 	{
-		(*c)->angle -= 5.01;
+		(*c)->angle -= 5.00;
 		if ((*c)->angle < 0)
-			(*c)->angle = 360;
+			(*c)->angle = 360 - ((*c)->angle * -1);
 		raycast(c, 0, (*c)->angle);
 	}
 	else
 	{
-		(*c)->angle += 5.01;
-		if ((*c)->angle > 360)
-			(*c)->angle = 0;
+		(*c)->angle += 5.00;
+		(*c)->angle = fmodf((*c)->angle, 360.00);
 		raycast(c, 0, (*c)->angle);
 	}
 	printf("angle : %f\n", (*c)->angle);
@@ -69,8 +68,8 @@ int	main(void)
 	    const char *lines[] = {
         "1111111111111111111111111",
         "1000000000110000000000001",
-        "1011000001110000000000001",
-        "1001000000000000000000001",
+        "1000000001110000000000001",
+        "1000000000000000000000001",
         "111111111011000001110000000000001",
         "100000000011000001110111111111111",
         "11110111111111011100000010001",
@@ -114,6 +113,5 @@ int	main(void)
 	mlx_put_image_to_window(c->m_ptr, c->w_ptr, c->roof_and_ground->img, 0, 0);
 	c->displayed_img = init_image(c, c->height, c->width);
 	raycast(&c, 0, c->angle);
-	mlx_put_image_to_window(c->m_ptr, c->w_ptr, c->displayed_img->img, 0, 0);
 	mlx_loop(c->m_ptr);
 }

@@ -6,30 +6,31 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 11:59:39 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/11 16:14:30 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../cube3d.h"
 
-double deg_to_rad(double deg)
+float deg_to_rad(float deg)
 {
     return (deg * M_PI / 180.0);
 }
 
-double	angle_calc(double angle, double calc)
+float	angle_calc(float angle, float calc)
 {
-	angle = angle + calc - 33;
+	// printf("%f %f\n", angle, calc);
+	angle = angle + calc - 33.00;
 	if (angle < 0)
-		angle = 360 + angle;
+		angle = 360 - angle * -1;
 	else if (angle >= 360)
-		angle = 360 - angle;
+		angle = fmodf(angle, 360.00);
 	return (angle);
 }
-double	len_to_hit_wall_n(t_c *p)
+float	len_to_hit_wall_n(t_c *p)
 {
 	int		i;
-	double	temp;
+	float	temp;
 
 	temp = 1 - (p->pos_y - (int)p->pos_y);
 	i = 0;
@@ -37,10 +38,10 @@ double	len_to_hit_wall_n(t_c *p)
 		i++;
 	return (temp + i);
 }
-double	len_to_hit_wall_e(t_c *p)
+float	len_to_hit_wall_e(t_c *p)
 {
 	int		i;
-	double	temp;
+	float	temp;
 
 	temp = p->pos_x - (int)p->pos_x;
 	i = 0;
@@ -48,10 +49,10 @@ double	len_to_hit_wall_e(t_c *p)
 		i++;
 	return (temp + i);
 }
-double	len_to_hit_wall_w(t_c *p)
+float	len_to_hit_wall_w(t_c *p)
 {
 	int		i;
-	double	temp;
+	float	temp;
 
 	temp = p->pos_x - (int)p->pos_x;
 	i = 0;
@@ -59,10 +60,10 @@ double	len_to_hit_wall_w(t_c *p)
 		i++;
 	return (temp + i);
 }
-double	len_to_hit_wall_s(t_c *p)
+float	len_to_hit_wall_s(t_c *p)
 {
 	int		i;
-	double	temp;
+	float	temp;
 
 	temp = 1 - (p->pos_y - (int)p->pos_y);
 	i = 0;
@@ -71,11 +72,11 @@ double	len_to_hit_wall_s(t_c *p)
 	return (temp + i);
 }
 
-t_r	*top_left(t_c **c, double adj, double opp, double angles)
+t_r	*top_left(t_c **c, float adj, float opp, float angles)
 {
 	t_c		*p;
-	double	hyp_w;
-	double	hyp_n;
+	float	hyp_w;
+	float	hyp_n;
 	t_r		*raydata;
 
 	raydata = malloc(sizeof(t_c));
@@ -90,11 +91,11 @@ t_r	*top_left(t_c **c, double adj, double opp, double angles)
 		return (raydata->dist = hyp_w, raydata->wall = 'w', raydata);
 	return (raydata->dist = hyp_n, raydata->wall = 'n', raydata);
 }
-t_r	*top_right(t_c **c, double adj, double opp, double angles)
+t_r	*top_right(t_c **c, float adj, float opp, float angles)
 {
 	t_c		*p;
-	double	hyp_e;
-	double	hyp_n;
+	float	hyp_e;
+	float	hyp_n;
 	t_r		*raydata;
 
 	raydata = malloc(sizeof(t_c));
@@ -108,11 +109,11 @@ t_r	*top_right(t_c **c, double adj, double opp, double angles)
 		return (raydata->dist = hyp_e, raydata->wall = 'e', raydata);
 	return (raydata->dist = hyp_n, raydata->wall = 'n', raydata);
 }
-t_r	*bottom_left(t_c **c, double adj, double opp, double angles)
+t_r	*bottom_left(t_c **c, float adj, float opp, float angles)
 {
 	t_c		*p;
-	double	hyp_w;
-	double	hyp_s;
+	float	hyp_w;
+	float	hyp_s;
 	t_r		*raydata;
 
 	raydata = malloc(sizeof(t_c));
@@ -127,11 +128,11 @@ t_r	*bottom_left(t_c **c, double adj, double opp, double angles)
 		return (raydata->dist = hyp_w, raydata->wall = 'w', raydata);
 	return (raydata->dist = hyp_s, raydata->wall = 's', raydata);
 }
-t_r	*bottom_right(t_c **c, double adj, double opp, double angles)
+t_r	*bottom_right(t_c **c, float adj, float opp, float angles)
 {
 	t_c		*p;
-	double	hyp_e;
-	double	hyp_s;
+	float	hyp_e;
+	float	hyp_s;
 	t_r		*raydata;
 
 	raydata = malloc(sizeof(t_c));
@@ -176,37 +177,53 @@ int	find_color(int a)
 void	draw_wall_height_line(t_r *raydata, t_img **displayed_img, t_c *p, int x)
 {
 	int		i;
-	double	y;
+	float	y;
 	int		color;
+	int		wall_size;
 
+	wall_size = p->height / raydata->dist;
 	color = find_color(raydata->wall);
-	i = p->height - raydata->dist * 20;
-	y = raydata->dist * 20;
-	while (y < i)
+	i = p->height - (p->height - wall_size) / 2;
+	y = (p->height - wall_size) / 2;
+	if (y < 0)
+		y = 0;
+	//temp fix to fix later
+	while (y < i && y < p->height)
 	{
 		put_pixel_to_image((*displayed_img), x, (int)y, color);
 		y++;
 	}
 }
 
-void	raycast(t_c **c, int i, double angles)
+t_img	*duplicate_image(t_img *to_dup, t_img *dest)
+{
+	dest = to_dup;
+	return (dest);
+}
+
+void	raycast(t_c **c, int i, float angles)
 {
 	t_c		*p;
 
 	p = *c;
 	while (i < p->width)
 	{
-		angles = angle_calc(p->angle, (double)66 / p->width * i);
+		angles = angle_calc(p->angle, 66.00 / (float)p->width * i);
 		p->raydata[i] = angle_choser(c, angles);
 		if (!p->raydata[i])
-			printf("angle : %f, width pixel : %d ray error\n", p->angle, i);
+			printf("angle : %f, width pixel : %d ray error\n", angles, i);
 		i++;
 	}
 	i = 0;
+	render_roof(10000 * 0 + 100 * 20 + 20, c);
+	render_floor(300 * 10000 + 100 * 100 + 50, c);
 	p->displayed_img = p->roof_and_ground;
 	while (i < p->width)
 	{
+		printf("%f\n", p->raydata[i]->dist);
 		draw_wall_height_line(p->raydata[i], &p->displayed_img, p, i);
 		i++;
 	}
+	mlx_clear_window(p->m_ptr, p->w_ptr);
+	mlx_put_image_to_window(p->m_ptr, p->w_ptr, p->displayed_img->img, 0, 0);
 }

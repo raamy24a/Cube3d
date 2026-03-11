@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:03:09 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 00:43:17 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/11 15:19:20 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include "../minilibx/mlx.h"
 # include "math.h"
+# include "../libft/libft.h"
 
 // temp include
 #include <string.h>
@@ -42,7 +43,7 @@ typedef struct cube
 {
 	float	pos_x;
 	float	pos_y;
-	double	angle;
+	float	angle;
 	char	**map;
 	int		width;
 	int		height;
@@ -60,6 +61,6 @@ void	render_roof(int color, t_c **c);
 void	render_floor(int color, t_c **c);
 t_img	*init_image(t_c *p, int height, int width);
 void	put_pixel_to_image(t_img *img, int x, int y, int color);
-void	raycast(t_c **c, int i, double angles);
+void	raycast(t_c **c, int i, float angles);
 
 #endif
