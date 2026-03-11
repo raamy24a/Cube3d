@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:21 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 03:18:56 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/11 11:10:03 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,16 +16,19 @@ void	moving_cam(t_c **c, int key)
 {
 	if (key == 65361)
 	{
-		(*c)->angle -= 0.01;
+		(*c)->angle -= 5.01;
 		if ((*c)->angle < 0)
 			(*c)->angle = 360;
+		raycast(c, 0, (*c)->angle);
 	}
 	else
 	{
-		(*c)->angle += 0.01;
+		(*c)->angle += 5.01;
 		if ((*c)->angle > 360)
 			(*c)->angle = 0;
+		raycast(c, 0, (*c)->angle);
 	}
+	printf("angle : %f\n", (*c)->angle);
 }
 
 void	cleanup(t_c **c)
@@ -109,8 +112,8 @@ int	main(void)
 	render_roof(10000 * 0 + 100 * 20 + 20, &c);
 	render_floor(300 * 10000 + 100 * 100 + 50, &c);
 	mlx_put_image_to_window(c->m_ptr, c->w_ptr, c->roof_and_ground->img, 0, 0);
+	c->displayed_img = init_image(c, c->height, c->width);
 	raycast(&c, 0, c->angle);
 	mlx_put_image_to_window(c->m_ptr, c->w_ptr, c->displayed_img->img, 0, 0);
 	mlx_loop(c->m_ptr);
-
 }

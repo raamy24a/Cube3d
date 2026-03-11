@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 01:33:28 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/11 11:59:39 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ double	angle_calc(double angle, double calc)
 	angle = angle + calc - 33;
 	if (angle < 0)
 		angle = 360 + angle;
-	else if (angle > 360)
+	else if (angle >= 360)
 		angle = 360 - angle;
 	return (angle);
 }
@@ -110,7 +110,7 @@ t_r	*top_right(t_c **c, double adj, double opp, double angles)
 }
 t_r	*bottom_left(t_c **c, double adj, double opp, double angles)
 {
-		t_c		*p;
+	t_c		*p;
 	double	hyp_w;
 	double	hyp_s;
 	t_r		*raydata;
@@ -163,7 +163,7 @@ t_r	*angle_choser(t_c **c, int angles)
 int	find_color(int a)
 {
 	if (a == 'n')
-		return (0xf0f8ff);
+		return (0xff0000);
 	else if (a == 's')
 		return (0x191970);
 	else if (a == 'e')
@@ -175,9 +175,9 @@ int	find_color(int a)
 
 void	draw_wall_height_line(t_r *raydata, t_img **displayed_img, t_c *p, int x)
 {
-	int	i;
+	int		i;
 	double	y;
-	int color;
+	int		color;
 
 	color = find_color(raydata->wall);
 	i = p->height - raydata->dist * 20;
@@ -198,14 +198,15 @@ void	raycast(t_c **c, int i, double angles)
 	{
 		angles = angle_calc(p->angle, (double)66 / p->width * i);
 		p->raydata[i] = angle_choser(c, angles);
+		if (!p->raydata[i])
+			printf("angle : %f, width pixel : %d ray error\n", p->angle, i);
 		i++;
 	}
 	i = 0;
-	p->displayed_img = init_image(p, p->height, p->width);
+	p->displayed_img = p->roof_and_ground;
 	while (i < p->width)
 	{
 		draw_wall_height_line(p->raydata[i], &p->displayed_img, p, i);
 		i++;
 	}
 }
-
