@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 01:19:17 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/11 01:33:28 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,19 +173,19 @@ int	find_color(int a)
 	return (0);
 }
 
-void	draw_wall_height_line(t_r *raydata, t_img **displayed_img, t_c *p, int y)
+void	draw_wall_height_line(t_r *raydata, t_img **displayed_img, t_c *p, int x)
 {
 	int	i;
-	int	x;
+	double	y;
 	int color;
 
 	color = find_color(raydata->wall);
-	i = p->height - raydata->dist;
-	x = raydata->dist;
-	while (x < i)
+	i = p->height - raydata->dist * 20;
+	y = raydata->dist * 20;
+	while (y < i)
 	{
-		put_pixel_to_image((*displayed_img), x, y, color);
-		x++;
+		put_pixel_to_image((*displayed_img), x, (int)y, color);
+		y++;
 	}
 }
 
