@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:28 by radib             #+#    #+#             */
-/*   Updated: 2026/03/09 13:26:29 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/11 00:28:01 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,20 +36,19 @@ t_img	*init_image(t_c *p, int height, int width)
 	return (img);
 }
 
-void	init_cube(t_c **c, char angle)
+void	init_cube(t_c **c, char angle, char **map)
 {
 	t_c	*p;
-	int	i;
 
-	i = 0;
 	p = (*c);
 	p->width = 1000;
 	p->height = 1000;
 	p->angle = angle_calculator(angle);
 	p->fps = 60;
 	p->m_ptr = mlx_init();
+	p->pos_x = 1.5;
+	p->pos_y = 1.5;
 	p->w_ptr = mlx_new_window(p->m_ptr, p->width, p->height, "Cube");
-	p->rays = malloc(sizeof(int **) * p->width);
-	while (i < p->width)
-		p->rays[i] = malloc(sizeof(int *) * 2);
+	p->raydata = malloc(sizeof(t_r *) * p->width);
+	p->map = map;
 }
