@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 16:14:30 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/12 01:11:39 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,14 +81,20 @@ t_r	*top_left(t_c **c, float adj, float opp, float angles)
 
 	raydata = malloc(sizeof(t_c));
 	p = *c;
-	angles -= 270;
+	angles = fmod(angles, 90.00);
 	opp = len_to_hit_wall_w(p);
 	adj = len_to_hit_wall_n(p);
 	hyp_w = 1 / (sin(deg_to_rad(angles)) / opp);
+	// printf("tl%f\n", angles);
 	angles = 90 - angles;
+	// printf("tl%f\n", angles);
 	hyp_n = 1 / (cos(deg_to_rad(angles)) / adj);
 	if (hyp_n > hyp_w)
+	{
+		printf("dist W:%f\n",hyp_w);
 		return (raydata->dist = hyp_w, raydata->wall = 'w', raydata);
+	}
+	printf("dist N:%f\n",hyp_n);
 	return (raydata->dist = hyp_n, raydata->wall = 'n', raydata);
 }
 t_r	*top_right(t_c **c, float adj, float opp, float angles)
@@ -103,10 +109,16 @@ t_r	*top_right(t_c **c, float adj, float opp, float angles)
 	opp = len_to_hit_wall_e(p);
 	adj = len_to_hit_wall_n(p);
 	hyp_n = 1 / (cos(deg_to_rad(angles)) / adj);
+	// printf("tr%f\n", angles);
 	angles = 90 - angles;
+	// printf("tr%f\n", angles);
 	hyp_e = 1 / (sin(deg_to_rad(angles)) / opp);
 	if (hyp_n > hyp_e)
+	{
+		printf("dist E:%f\n",hyp_e);
 		return (raydata->dist = hyp_e, raydata->wall = 'e', raydata);
+	}
+	printf("dist N:%f\n",hyp_n);
 	return (raydata->dist = hyp_n, raydata->wall = 'n', raydata);
 }
 t_r	*bottom_left(t_c **c, float adj, float opp, float angles)
@@ -118,14 +130,20 @@ t_r	*bottom_left(t_c **c, float adj, float opp, float angles)
 
 	raydata = malloc(sizeof(t_c));
 	p = *c;
-	angles -= 180;
+	angles = fmod(angles, 90.00);
 	opp = len_to_hit_wall_w(p);
 	adj = len_to_hit_wall_s(p);
-	hyp_w = 1 / (sin(deg_to_rad(angles)) / opp);
-	angles = 90 - angles;
 	hyp_s = 1 / (cos(deg_to_rad(angles)) / adj);
+	// printf("bl%f\n", angles);
+	angles = 90 - angles;
+	// printf("bl%f\n", angles);
+		hyp_w = 1 / (sin(deg_to_rad(angles)) / opp);
 	if (hyp_s > hyp_w)
+	{
+		printf("dist W:%f\n",hyp_w);
 		return (raydata->dist = hyp_w, raydata->wall = 'w', raydata);
+	}
+	printf("dist S:%f\n",hyp_s);
 	return (raydata->dist = hyp_s, raydata->wall = 's', raydata);
 }
 t_r	*bottom_right(t_c **c, float adj, float opp, float angles)
@@ -137,25 +155,33 @@ t_r	*bottom_right(t_c **c, float adj, float opp, float angles)
 
 	raydata = malloc(sizeof(t_c));
 	p = *c;
-	angles -= 90;
+	// printf("br%f\n", angles);
+	angles = fmod(angles, 90.00);
 	opp = len_to_hit_wall_e(p);
 	adj = len_to_hit_wall_s(p);
-	hyp_s = 1 / (cos(deg_to_rad(angles)) / adj);
-	angles = 90 - angles;
 	hyp_e = 1 / (sin(deg_to_rad(angles)) / opp);
+	// printf("br%f\n", angles);
+	angles = 90 - angles;
+	// printf("br%f\n", angles);
+	hyp_s = 1 / (cos(deg_to_rad(angles)) / adj);
 	if (hyp_s > hyp_e)
+	{
+		printf("dist E:%f\n",hyp_e);
 		return (raydata->dist = hyp_e, raydata->wall = 'e', raydata);
+	}
+	printf("dist S:%f\n",hyp_s);
 	return (raydata->dist = hyp_s, raydata->wall = 's', raydata);
 }
 
-t_r	*angle_choser(t_c **c, int angles)
+t_r	*angle_choser(t_c **c, float angles)
 {
+	// printf("%f\n", angles);
 	if (angles >= 0 && angles < 90)
 		return (top_right(c, 0, 0, angles));
 	if (angles >= 90 && angles < 180)
 		return (bottom_right(c, 0, 0, angles));
 	if (angles >= 180 && angles < 270)
-		return (bottom_right(c, 0, 0, angles));
+		return (bottom_left(c, 0, 0, angles));
 	if (angles >= 270 && angles < 360)
 		return (top_left(c, 0, 0, angles));
 	return (0);
@@ -166,11 +192,11 @@ int	find_color(int a)
 	if (a == 'n')
 		return (0xff0000);
 	else if (a == 's')
-		return (0x191970);
+		return (0xffff00);
 	else if (a == 'e')
-		return (0xff3e96);
+		return (0xffffff);
 	else if (a == 'w')
-		return (0xffc0cb);
+		return (0x00ff00);
 	return (0);
 }
 
@@ -209,6 +235,7 @@ void	raycast(t_c **c, int i, float angles)
 	while (i < p->width)
 	{
 		angles = angle_calc(p->angle, 66.00 / (float)p->width * i);
+		// printf("angle : %f\n", angles); //anglepring
 		p->raydata[i] = angle_choser(c, angles);
 		if (!p->raydata[i])
 			printf("angle : %f, width pixel : %d ray error\n", angles, i);
@@ -220,7 +247,7 @@ void	raycast(t_c **c, int i, float angles)
 	p->displayed_img = p->roof_and_ground;
 	while (i < p->width)
 	{
-		printf("%f\n", p->raydata[i]->dist);
+		// printf("%f\n", p->raydata[i]->dist); //distprint 
 		draw_wall_height_line(p->raydata[i], &p->displayed_img, p, i);
 		i++;
 	}
