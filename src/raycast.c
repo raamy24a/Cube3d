@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/12 17:04:28 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/13 00:25:30 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ float deg_to_rad(float deg)
 float	angle_calc(float angle, float calc)
 {
 	// printf("%f %f\n", angle, calc);
-	angle = angle + calc - 33.00;
+	angle = angle + calc - 33.33;
 	if (angle < 0)
 		angle = 360 - angle * -1;
 	else if (angle >= 360)
@@ -74,16 +74,14 @@ float	len_to_hit_wall_s(t_c *p)
 
 t_r	*top_left(t_c **c, float adj, float opp, float angles)
 {
-	t_c		*p;
-	float	hyp_w;
-	float	hyp_n;
-	t_r		*raydata;
+	float			hyp_w;
+	float			hyp_n;
+	t_r				*raydata;
 
 	raydata = malloc(sizeof(t_c));
-	p = *c;
 	angles = fmod(angles, 90.00);
-	opp = len_to_hit_wall_n(p);
-	adj = len_to_hit_wall_w(p);
+	opp = len_to_hit_wall_n((*c));
+	adj = len_to_hit_wall_w((*c));
 	printf("opp : %f adj : %f ", opp, adj);
 	hyp_w = 1 / (sin(deg_to_rad(angles)) / opp);
 	// printf("tl%f\n", angles);
@@ -231,30 +229,95 @@ t_img	*duplicate_image(t_img *to_dup, t_img *dest)
 	return (dest);
 }
 
-void	raycast(t_c **c, int i, float angles)
+int	wall_change_pixel(t_c **c, int	i)
 {
 	t_c		*p;
+	int		j;
 
 	p = *c;
-	while (i < p->width)
+	j = i;
+	while(i + 1 < p->width && p->raydata[j]->wall == p->raydata[i]->wall)
 	{
-		angles = angle_calc(p->angle, 66.00 / (float)p->width * i);
-		// printf("angle : %f\n", angles); //anglepring
-		p->raydata[i] = angle_choser(c, angles);
-		if (!p->raydata[i])
-			printf("angle : %f, width pixel : %d ray error\n", angles, i);
 		i++;
 	}
+	return (i);
+}
+
+void	un_fish_eye(t_c **c, int left_side_pixel, int right_side_pixel)
+{
+	int 	i;
+	t_c		*p;
+	float	temp;
+
+	p = *c;
 	i = 0;
-	render_roof(10000 * 0 + 100 * 20 + 20, c);
-	render_floor(300 * 10000 + 100 * 100 + 50, c);
-	p->displayed_img = p->roof_and_ground;
 	while (i < p->width)
 	{
-		// printf("%f\n", p->raydata[i]->dist); //distprint 
-		draw_wall_height_line(p->raydata[i], &p->displayed_img, p, i);
-		i++;
+		left_side_pixel = i;
+		right_side_pixel = wall_change_pixel(c, i);
+		temp = p->raydata[left_side_pixel]->dist + p->raydata[right_side_pixel]->dist;
+		temp = (temp / 2) / (right_side_pixel - left_side_pixel);
+		while (i <= right_side_pixel)
+		{
+			p->raydata[i]->dist = p->raydata[left_side_pixel]->dist + temp;
+			i++;
+		}
 	}
-	mlx_clear_window(p->m_ptr, p->w_ptr);
-	mlx_put_image_to_window(p->m_ptr, p->w_ptr, p->displayed_img->img, 0, 0);
+}
+
+// void	raycast(t_c **c, int i, float angles)
+// {
+// t_c		*p;
+
+// p = *c;
+// while (i < p->width)
+// {
+// 	angles = angle_calc(p->angle, 90.00 / (float)p->width * i);
+// 	// printf("angle : %f\n", angles); //anglepring
+// 	p->raydata[i] = angle_choser(c, angles);
+// 	if (!p->raydata[i])
+// 		printf("angle : %f, width pixel : %d ray error\n", angles, i);
+// 	i++;
+// }
+// i = 0;
+// render_roof(10000 * 0 + 100 * 20 + 20, c);
+// render_floor(300 * 10000 + 100 * 100 + 50, c);
+// p->displayed_img = p->roof_and_ground;
+// un_fish_eye(c, 0, 0);
+// while (i < p->width)
+// {
+// 	// printf("%f\n", p->raydata[i]->dist); //distprint 
+// 	draw_wall_height_line(p->raydata[i], &p->displayed_img, p, i);
+// 	i++;
+// }
+// mlx_clear_window(p->m_ptr, p->w_ptr);
+// mlx_put_image_to_window(p->m_ptr, p->w_ptr, p->displayed_img->img, 0, 0);
+// }
+void    raycast(t_c **c, int i, float angles)
+{
+    t_c      *p;
+    float    corrected_dist;
+
+    p = *c;
+    while (i < p->width)
+    {
+        angles = angle_calc(p->angle, 66.66 / (float)p->width * i);
+        p->raydata[i] = angle_choser(c, angles);
+        if (!p->raydata[i])
+            printf("angle : %f, width pixel : %d ray error\n", angles, i);
+        corrected_dist = p->raydata[i]->dist * cos(deg_to_rad(p->angle -angles));
+        p->raydata[i]->dist = corrected_dist;
+        i++;
+    }
+    i = 0;
+    render_roof(10000 * 0 + 100 * 20 + 20, c);
+    render_floor(300 * 10000 + 100 * 100 + 50, c);
+    p->displayed_img = p->roof_and_ground;
+    while (i < p->width)
+    {
+        draw_wall_height_line(p->raydata[i], &p->displayed_img, p, i);
+        i++;
+    }
+    mlx_clear_window(p->m_ptr, p->w_ptr);
+    mlx_put_image_to_window(p->m_ptr, p->w_ptr, p->displayed_img->img, 0, 0);
 }
