@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/13 00:25:30 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/13 02:04:27 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,7 +78,7 @@ t_r	*top_left(t_c **c, float adj, float opp, float angles)
 	float			hyp_n;
 	t_r				*raydata;
 
-	raydata = malloc(sizeof(t_c));
+	raydata = malloc(sizeof(t_r));
 	angles = fmod(angles, 90.00);
 	opp = len_to_hit_wall_n((*c));
 	adj = len_to_hit_wall_w((*c));
@@ -103,7 +103,7 @@ t_r	*top_right(t_c **c, float adj, float opp, float angles)
 	float	hyp_n;
 	t_r		*raydata;
 
-	raydata = malloc(sizeof(t_c));
+	raydata = malloc(sizeof(t_r));
 	p = *c;
 	opp = len_to_hit_wall_e(p);
 	adj = len_to_hit_wall_n(p);
@@ -128,7 +128,7 @@ t_r	*bottom_left(t_c **c, float adj, float opp, float angles)
 	float	hyp_s;
 	t_r		*raydata;
 
-	raydata = malloc(sizeof(t_c));
+	raydata = malloc(sizeof(t_r));
 	p = *c;
 	angles = fmod(angles, 90.00);
 	opp = len_to_hit_wall_w(p);
@@ -154,7 +154,7 @@ t_r	*bottom_right(t_c **c, float adj, float opp, float angles)
 	float	hyp_s;
 	t_r		*raydata;
 
-	raydata = malloc(sizeof(t_c));
+	raydata = malloc(sizeof(t_r));
 	p = *c;
 	// printf("br%f\n", angles);
 	angles = fmod(angles, 90.00);
@@ -305,7 +305,7 @@ void    raycast(t_c **c, int i, float angles)
         p->raydata[i] = angle_choser(c, angles);
         if (!p->raydata[i])
             printf("angle : %f, width pixel : %d ray error\n", angles, i);
-        corrected_dist = p->raydata[i]->dist * cos(deg_to_rad(p->angle -angles));
+        corrected_dist = p->raydata[i]->dist * cos(deg_to_rad(angles - p->angle));
         p->raydata[i]->dist = corrected_dist;
         i++;
     }
