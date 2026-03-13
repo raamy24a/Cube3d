@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:28 by radib             #+#    #+#             */
-/*   Updated: 2026/03/12 20:17:48 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/13 14:16:17 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ void	init_cube(t_c **c, char angle, char **map)
 	t_c	*p;
 
 	p = (*c);
-	p->width = 1000;
-	p->height = 1000;
+	p->width = 200;
+	p->height = 200;
 	p->angle = angle_calculator(angle);
 	p->fps = 60;
 	p->m_ptr = mlx_init();
@@ -50,5 +50,6 @@ void	init_cube(t_c **c, char angle, char **map)
 	p->pos_y = 2.5;
 	p->w_ptr = mlx_new_window(p->m_ptr, p->width, p->height, "Cube");
 	p->raydata = malloc(sizeof(t_r *) * p->width);
+	p->fov = 66.00f;
 	p->map = map;
 }

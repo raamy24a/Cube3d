@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:03:09 by radib             #+#    #+#             */
-/*   Updated: 2026/03/11 15:19:20 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/13 13:23:35 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,7 @@ typedef struct cube
 	int		width;
 	int		height;
 	int		fps;
+	float	fov;
 	void	*m_ptr;
 	void	*w_ptr;
 	t_r		**raydata;
