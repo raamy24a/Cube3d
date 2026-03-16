@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/16 02:21:46 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/16 02:45:21 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,6 +105,7 @@ static void	fill_ray_result(t_ray *r, t_c *c)
 		else
 			r->wall = c->wall_n;
 	}
+    r->wall_x = r->wall_x - floor(r->wall_x);
 }
 
 static t_ray	*dda(t_c **c, float ray_dir_x, float ray_dir_y)
@@ -170,8 +171,8 @@ static void	draw_wall_height_line(t_ray *r, t_img **img, t_c *p, int x)
 
 	wall_size = p->height / r->dist;
 	
-	y = (p->height - wall_size) / 2;
-	y_end = p->height - (p->height - wall_size) / 2;
+	y = (float)(p->height - wall_size) / 2.0f;
+    y_end = y + wall_size;
 	if (y < 0)
 		y = 0;
 	while (y < y_end && y < p->height)
