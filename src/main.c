@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:21 by radib             #+#    #+#             */
-/*   Updated: 2026/03/15 02:12:31 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/15 15:15:39 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,7 +114,7 @@ int	main(void)
 	mlx_put_image_to_window(c->m_ptr, c->w_ptr, c->roof_and_ground->img, 0, 0);
 	c->displayed_img = init_image(c, c->height, c->width);
 	raycast(&c, 0, c->angle);
-	mlx_loop_hook(c->m_ptr);
+	mlx_loop(c->m_ptr);
 }
 // ESC	65307
 // W	119

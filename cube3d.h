@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/25 16:03:09 by radib             #+#    #+#             */
-/*   Updated: 2026/03/15 02:02:36 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/16 01:35:59 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,14 +16,15 @@
 # include <fcntl.h>
 # include <stdio.h>
 # include <stdlib.h>
+# include <string.h>
+# include <math.h>
 # include "../minilibx/mlx.h"
-# include "math.h"
 # include "../libft/libft.h"
 
-// temp include
-#include <string.h>
+# ifndef M_PI
+#  define M_PI 3.14159265358979323846
+# endif
 
-# define M_PI           3.14159265358979323846
 typedef struct s_img
 {
 	void	*img;
@@ -33,13 +34,37 @@ typedef struct s_img
 	int		endian;
 }	t_img;
 
-typedef struct raydata
-{
-	int		wall;
-	float	dist;
-}	t_r;
 
-typedef struct cube
+typedef struct s_ray
+{
+	float	ray_dir_x;
+	float	ray_dir_y;
+	float	delta_x;
+	float	delta_y;
+	float	side_dist_x;
+	float	side_dist_y;
+	int		step_x;
+	int		step_y;
+	int		map_x;
+	int		map_y;
+	int		side;
+	t_img	*wall;
+	float	wall_x;
+	float	dist;
+}	t_ray;
+
+typedef struct s_cam
+{
+	float	dir_x;
+	float	dir_y;
+	float	plane_x;
+	float	plane_y;
+	float	camera_x;
+	float	ray_x;
+	float	ray_y;
+}	t_cam;
+
+typedef struct s_cube
 {
 	float	pos_x;
 	float	pos_y;
@@ -47,16 +72,18 @@ typedef struct cube
 	char	**map;
 	int		width;
 	int		height;
-	int		fps;
 	float	fov;
-	int		need_render;
 	void	*m_ptr;
 	void	*w_ptr;
-	t_r		**raydata;
+	t_ray	**raydata;
 	t_img	*displayed_img;
 	t_img	*roof_and_ground;
-}			t_c;
-// init
+	t_img	*wall_n;
+	t_img	*wall_s;
+	t_img	*wall_e;
+	t_img	*wall_w;
+}	t_c;
+
 void	init_cube(t_c **c, char angle, char **map);
 void	moving(t_c **c, int key);
 void	render_roof(int color, t_c **c);
