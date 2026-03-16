@@ -6,7 +6,7 @@
 /*   By: radib <radib@student.s19.be>               +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/03 14:35:49 by radib             #+#    #+#             */
-/*   Updated: 2026/03/16 02:45:21 by radib            ###   ########.fr       */
+/*   Updated: 2026/03/16 03:10:15 by radib            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ static void	fill_ray_result(t_ray *r, t_c *c)
 	if (r->side == 0)
 	{
 		r->dist = r->side_dist_x - r->delta_x;
-        r->wall_x = c->pos_y + r->dist * r->ray_dir_y;
+		r->wall_x = c->pos_y + r->dist * r->ray_dir_y;
 		if (r->ray_dir_x > 0)
 			r->wall = c->wall_e;
 		else
@@ -99,13 +99,13 @@ static void	fill_ray_result(t_ray *r, t_c *c)
 	else
 	{
 		r->dist = r->side_dist_y - r->delta_y;
-        r->wall_x = c->pos_x + r->dist * r->ray_dir_x;
+		r->wall_x = c->pos_x + r->dist * r->ray_dir_x;
 		if (r->ray_dir_y > 0)
 			r->wall = c->wall_s;
 		else
 			r->wall = c->wall_n;
 	}
-    r->wall_x = r->wall_x - floor(r->wall_x);
+	r->wall_x = r->wall_x - floor(r->wall_x);
 }
 
 static t_ray	*dda(t_c **c, float ray_dir_x, float ray_dir_y)
@@ -126,6 +126,7 @@ static t_ray	*dda(t_c **c, float ray_dir_x, float ray_dir_y)
 	fill_ray_result(r, (*c));
 	return (r);
 }
+
 int	get_pixel_from_image(t_img *img, int x, int y)
 {
 	char	*pixel;
@@ -146,7 +147,6 @@ static void	cast_rays(t_c **c)
 {
 	t_c		*p;
 	t_cam	cam;
-	// float	diff;
 	int		i;
 
 	p = *c;
@@ -170,14 +170,13 @@ static void	draw_wall_height_line(t_ray *r, t_img **img, t_c *p, int x)
 	int		color;
 
 	wall_size = p->height / r->dist;
-	
 	y = (float)(p->height - wall_size) / 2.0f;
-    y_end = y + wall_size;
+	y_end = y + wall_size;
 	if (y < 0)
 		y = 0;
 	while (y < y_end && y < p->height)
 	{
-        color = get_pixel_from_image(r->wall, 128 * r->wall_x,  (int)((128.00f / wall_size) * (y - (p->height - wall_size) / 2)));
+		color = get_pixel_from_image(r->wall, 128 * r->wall_x, (int)((128.00f / wall_size) * (y - (p->height - wall_size) / 2)));
 		put_pixel_to_image(*img, x, (int)y, color);
 		y++;
 	}
@@ -185,8 +184,8 @@ static void	draw_wall_height_line(t_ray *r, t_img **img, t_c *p, int x)
 
 static void	render_walls(t_c **c)
 {
-	t_c		*p;
-	int		i;
+	t_c	*p;
+	int	i;
 
 	p = *c;
 	i = 0;
